@@ -1,4 +1,4 @@
-# Agentic Template
+# Agentic Project Template
 
 Reusable project scaffolding for long-running coding-agent work.
 
@@ -18,7 +18,7 @@ Create a new project from one template:
 
 ```bash
 mkdir -p ~/my-project
-rsync -a ~/agentic-template/templates/software-project/ ~/my-project/
+rsync -a ~/agentic-project-template/templates/software-project/ ~/my-project/
 cd ~/my-project
 git init
 ```
@@ -27,7 +27,7 @@ For a research or benchmark campaign:
 
 ```bash
 mkdir -p ~/my-research-campaign
-rsync -a ~/agentic-template/templates/research-campaign/ ~/my-research-campaign/
+rsync -a ~/agentic-project-template/templates/research-campaign/ ~/my-research-campaign/
 cd ~/my-research-campaign
 git init
 ```
@@ -36,7 +36,7 @@ If multiple coding agents may work at the same time, install the optional coordi
 module:
 
 ```bash
-rsync -a ~/agentic-template/optional_modules/multi_agent_coord/ ~/my-project/
+rsync -a ~/agentic-project-template/optional_modules/multi_agent_coord/ ~/my-project/
 chmod +x ~/my-project/agent/coord.py
 ```
 
