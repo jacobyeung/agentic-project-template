@@ -76,6 +76,25 @@ Use this rule in every project:
 In multi-agent mode, step 5 becomes: claim a lease with `agent/coord.py` before doing
 work, heartbeat while running, and mark it complete or failed.
 
+## Skills
+
+Both templates ship reusable agent skills under `.claude/skills/` (for Claude Code)
+and `.codex/skills/` (for Codex). Each tool auto-discovers them when it runs in the
+project, so a freshly copied template comes with them already wired. They
+operationalize the loop and routing rules above:
+
+- `resume` — session-start standup: reads `AGENTS.md` and the ledgers in order and
+  reports where things stand. Read-only.
+- `handoff` — session-close: writes findings only to the routed files, commits
+  completed work, and never invents a file path.
+- `closed-loop` — open or close a `CLOSED_LOOP_LEDGER.md` row in the project's schema.
+- `summary` — how to write a recap for a reader who did not watch the work.
+- `codex` — dispatch GPT-5.5 as an independent subagent, to offload implementation
+  or get a second opinion.
+
+Edit or delete any skill per project. Keep the `.claude/` and `.codex/` copies in
+sync, or symlink one directory to the other.
+
 ## Multi-Agent Coordination
 
 The coordination module is optional. Install it only when simultaneous agents, workers,
