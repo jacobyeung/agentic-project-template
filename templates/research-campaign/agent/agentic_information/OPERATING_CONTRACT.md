@@ -91,6 +91,12 @@ for cooperating projects. Direct backend submission is forbidden because it bypa
 that transaction, provenance checks, and retry scoping. Document any external callers
 that do not honor the shared lock as an explicit residual race.
 
+If the backend supports held submission, prefer this transaction: issue one owner-only
+admission receipt from the clean admitted snapshot, submit the job held, bind the
+receipt to the returned backend job id plus adapter digest/task subset, then release.
+The runtime consumes that exact receipt. Do not treat a caller-exported boolean or
+unbound token as authorization.
+
 No experiment may launch until all of these are true:
 
 - Contract status is `ready`, or it is `provisional` and the permitted scope and

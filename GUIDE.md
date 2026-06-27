@@ -10,6 +10,8 @@ admission and submission share one critical section; queued resource branches ar
 counted unless provably serialized; completion is attributed to artifacts produced by
 one attempt; scientific inputs are frozen and content-identified; retries name exact
 outputs/task subsets; and data/checkpoint schemas bind results to their true inputs.
+Where the scheduler supports held submission, bind a one-use admission receipt to the
+actual job id and adapter digest before release; an exported flag is not authorization.
 Projects still provide scheduler-specific implementations for these contracts.
 
 ## Which Template To Use
@@ -57,10 +59,11 @@ tested, what happened, and whether it was kept.
 decisions, attempts, rejected options, and historical policy changes. Current mutable
 policy belongs in the research template's operating contract.
 
-`agent/experiments/` or `runs/` stores immutable outputs. Do not treat a markdown ledger
-as the only record of a run. In the research template, each experiment also gets a
-tracked `RUN.md` control record containing preregistration, frozen inputs, resource
-admission, job identity, evaluation provenance, and reconciliation status.
+`agent/experiments/` or `runs/` stores immutable control records and compact evidence;
+do not treat a summary ledger as the only record of a run. In the research template,
+large raw artifacts live at the external output root named by the operating contract,
+while each tracked experiment gets a `RUN.md` containing preregistration, frozen
+inputs, resource admission, job identity, evaluation provenance, and reconciliation.
 
 `reports/DeepResearch/` is optional. Use it when external research reports, papers, or
 candidate technologies feed the project.
@@ -76,7 +79,7 @@ Use this rule in every project:
 | Fix or experiment verdict | `CLOSED_LOOP_LEDGER.md` |
 | Project history / decisions | `CAMPAIGN_LEDGER.md` |
 | One run's state and provenance (research) | `<experiment_dir>/RUN.md` |
-| Raw outputs | `experiments/`, `runs/`, or equivalent |
+| Raw outputs | the external output root named by `OPERATING_CONTRACT.md` |
 | Architecture notes | `docs/ARCHITECTURE.md` or a named handoff/result doc |
 | Research candidate status | `reports/DeepResearch/README.md` plus relevant report file |
 

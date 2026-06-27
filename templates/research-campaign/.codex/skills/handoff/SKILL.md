@@ -56,8 +56,9 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
 
 6. **Commit completed, verified units.** Follow Git Hygiene. One coherent unit per
    commit, descriptive message. **Before staging, verify no large/raw artifacts
-   are included** — raw outputs live under `experiments/` or `runs/`, never in
-   git. `git status -s` first; stage deliberately (not blind `git add -A`). Commit
+   are included** — large raw outputs live at the operating contract's external output
+   root, never in git; tracked run directories hold `RUN.md` and compact evidence.
+   `git status -s` first; stage deliberately (not blind `git add -A`). Commit
    on the current branch; don't force-push. If a unit isn't verified, leave it
    uncommitted and say so.
 
