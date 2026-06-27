@@ -40,15 +40,40 @@ rsync -a ~/agentic-project-template/optional_modules/multi_agent_coord/ ~/my-pro
 chmod +x ~/my-project/agent/coord.py
 ```
 
-Then update the placeholders in `AGENTS.md` and start every agent session by reading it.
+For a research campaign, replace the required bootstrap placeholders and remove or
+fill every sample row in the live records, then validate the initialized project:
+
+```bash
+python agent/validate_project.py
+```
+
+The validator rejects unresolved control-record placeholders, invalid or duplicate
+closed-loop states, operating-contract revision drift, malformed active run records,
+and divergent Codex/Claude skill mirrors; it also warns when live records age out.
+
+For either template, start every agent session with `AGENTS.md`; its bootstrap section
+points to the small set of live records needed for the current task.
 
 ## Core Ideas
 
 - `AGENTS.md` is the canonical bootstrap. It changes rarely.
 - `CURRENT_STATE.md` is the short live snapshot. In multi-agent mode it is single-writer.
+- Research templates keep mutable environment, resource, launch, and evaluation rules
+  in one revisioned `OPERATING_CONTRACT.md` instead of copying them into bootstrap or
+  history files.
 - `CLOSED_LOOP_LEDGER.md` records hypotheses, fixes, predicted checks, tests, and verdicts.
-- `CAMPAIGN_LEDGER.md` is append-only project history and standing decisions.
+- `CAMPAIGN_LEDGER.md` is append-only project history and decision rationale.
+- Every research run has a durable `RUN.md` that separates scheduler completion,
+  evaluation, and scientific verdicts.
 - Raw outputs live under `experiments/`, `runs/`, or another explicit artifact directory.
 - Optional `coord.py` provides leases, heartbeats, status files, completed work records, and a merge lock.
+
+When editing the research scaffold itself, validate its structure while allowing its
+intentional placeholders:
+
+```bash
+python templates/research-campaign/agent/validate_project.py \
+  --template --root templates/research-campaign
+```
 
 See [GUIDE.md](GUIDE.md) for the full operating model.

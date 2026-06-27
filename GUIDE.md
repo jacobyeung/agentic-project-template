@@ -26,22 +26,33 @@ Examples: apps, services, CLIs, libraries, internal tools, data products.
 ## File Roles
 
 `AGENTS.md` is the stable entry point for all coding agents. It should contain durable
-rules: mission, repo layout, environment, test gates, update rules, coordination rules,
-and known gotchas. Avoid putting rapidly changing status here.
+rules: mission, repo layout, quality gates, update routing, coordination, known gotchas,
+and links to current operations. Avoid putting changing commands, limits, or status
+here.
 
 `agent/agentic_information/CURRENT_STATE.md` is the volatile snapshot. It answers:
 where are we, what is in flight, what is the immediate next step, and what is blocked.
-Keep it short.
+Keep it to one screen and treat it as a cache: its results and run states should point
+to durable evidence.
+
+`agent/agentic_information/OPERATING_CONTRACT.md` is the revisioned source for current
+environment, resource, launch, recovery, and evaluation policy in a research campaign.
+This separation matters because numeric limits and commands change more often than the
+bootstrap process. Update the active contract once, bump its revision, log the reason
+in append-only history, and have current state reference the new revision.
 
 `agent/agentic_information/CLOSED_LOOP_LEDGER.md` records cause-and-effect work. Every
 nontrivial fix or experiment should say what it was expected to change, how it was
 tested, what happened, and whether it was kept.
 
 `agent/agentic_information/CAMPAIGN_LEDGER.md` is append-only history. It records
-decisions, attempts, rejected options, and long-lived policies.
+decisions, attempts, rejected options, and historical policy changes. Current mutable
+policy belongs in the research template's operating contract.
 
 `agent/experiments/` or `runs/` stores immutable outputs. Do not treat a markdown ledger
-as the only record of a run.
+as the only record of a run. In the research template, each experiment also gets a
+tracked `RUN.md` control record containing preregistration, frozen inputs, resource
+admission, job identity, evaluation provenance, and reconciliation status.
 
 `reports/DeepResearch/` is optional. Use it when external research reports, papers, or
 candidate technologies feed the project.
@@ -53,28 +64,48 @@ Use this rule in every project:
 | Produced thing | Write it to |
 |---|---|
 | Live status | `CURRENT_STATE.md`, or `.coord/STATUS/<agent>.json` in multi-agent mode |
+| Active environment/resource/launch/eval policy (research) | `OPERATING_CONTRACT.md` |
 | Fix or experiment verdict | `CLOSED_LOOP_LEDGER.md` |
 | Project history / decisions | `CAMPAIGN_LEDGER.md` |
+| One run's state and provenance (research) | `<experiment_dir>/RUN.md` |
 | Raw outputs | `experiments/`, `runs/`, or equivalent |
 | Architecture notes | `docs/ARCHITECTURE.md` or a named handoff/result doc |
 | Research candidate status | `reports/DeepResearch/README.md` plus relevant report file |
 
-## Recommended Agent Loop
+## Recommended Research Agent Loop
 
 ```text
-1. Read AGENTS.md.
-2. Read CURRENT_STATE.md.
-3. Read CLOSED_LOOP_LEDGER.md and CAMPAIGN_LEDGER.md.
-4. Check active work.
-5. Choose one unowned task.
-6. Implement, run, or analyze.
-7. Verify with the project gate.
-8. Record the result in the right ledger.
-9. Commit.
+1. Validate the bootstrap and reconcile current state with live work.
+2. Read the current operating-contract revision and the relevant open/no-go rows.
+3. Collect and evaluate finished work before launching more.
+4. Choose one unowned hypothesis and preregister its falsifiable threshold.
+5. Create its run record, freeze inputs, pass preflight, and admit resources.
+6. Launch once, observe it, and recover rather than duplicate it.
+7. Evaluate under the declared contract and decide against the registered threshold.
+8. Reconcile the run record, ledgers, best scores, current state, and markers.
+9. Verify the project gate and commit one coherent unit.
 ```
 
-In multi-agent mode, step 5 becomes: claim a lease with `agent/coord.py` before doing
-work, heartbeat while running, and mark it complete or failed.
+In multi-agent mode, claim a lease before step 4, heartbeat while running, and mark the
+lease complete or failed. Ownership coordination does not replace resource admission.
+
+## Preventing Stale Or Contradictory Documents
+
+Keep stable process, current policy, live state, evidence, and history in different
+files. In particular:
+
+- Do not repeat active numeric resource limits or launch/evaluation commands in
+  `AGENTS.md`, gotchas, handoffs, or append-only history.
+- Treat old campaign-ledger policies as history. Append a new decision that names the
+  superseded revision and links to the current operating contract; do not rewrite the
+  old row.
+- Do not maintain hand-counted totals when they can be derived from ledger rows.
+- Put no more than three decision-relevant results and exactly one next action in
+  `CURRENT_STATE.md`.
+- Record the policy revision used by every active job and experiment. A revision
+  mismatch is an actionable stale-state signal.
+- Use `python agent/validate_project.py` before launch and handoff. Structural errors
+  block new launches; age warnings trigger live verification.
 
 ## Skills
 
@@ -117,12 +148,15 @@ and a merge lock.
 Before using a copied template:
 
 - Replace `<PROJECT_NAME>`, `<MISSION>`, `<PRIMARY_METRIC>`, and `<QUALITY_GATE>`.
-- Fill in the environment commands.
+- Fill in `OPERATING_CONTRACT.md`, including environment, resource counting,
+  live-discovery, recovery, and evaluation readiness.
 - Define where raw outputs go.
-- Define the required test/evaluation command.
+- Define the required test/evaluation command and mark whether it is not implemented,
+  provisional, or authoritative.
 - Decide who may write `CURRENT_STATE.md`.
 - Add known gotchas and rejected approaches as they are discovered.
 - Add `.coord/` to `.gitignore` if using the optional coordination module.
+- Run `python agent/validate_project.py`; resolve every error before the first launch.
 - Commit the initialized template before starting substantive work.
 
 ## Naming Guidance

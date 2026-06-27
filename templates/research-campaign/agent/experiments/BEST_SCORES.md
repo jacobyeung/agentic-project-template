@@ -1,13 +1,14 @@
 # Best Scores
 
-Track the best-known result by area. Replace `score` with the project metric.
+Last updated: `<LAST_UPDATED>`
 
-| Area | Best Score | Experiment | Date | Notes |
-|---|---:|---|---|---|
-| `<area>` | `<value>` | `<experiment_tag>` | `<date>` | `<notes>` |
+Track only results eligible under the authoritative evaluation contract. Replace
+`score` with the project metric. Exploratory, provisional, unmatched, or within-noise
+results stay in their run records and ledgers; they do not become best scores.
 
-## Overall
+| Area | Best Score | Uncertainty / seeds | Experiment | Eval contract rev | Evaluated | Evidence |
+|---|---:|---|---|---|---|---|
+| `<area>` | `<value>` | `<noise floor or CI>` | `<experiment_tag>` | `<OPS-NNNN>` | `<date>` | `<metric artifact and RUN.md>` |
 
-- Best overall: `<value>`
-- Source: `<path>`
-- Last evaluated: `<date>`
+Do not maintain a second prose copy of the overall best below this table. Derive any
+summary from the table so there is one value to update.

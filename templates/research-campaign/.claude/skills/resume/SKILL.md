@@ -1,7 +1,7 @@
 ---
 name: resume
-description: Session-start bootstrap for this project. Reads AGENTS.md and the agent/agentic_information ledgers in the documented order, checks for in-flight work and uncommitted changes, and prints a tight standup (where we are / what's in flight / next step / blockers / do-not-rerun NO-GOs). Read-only. Use at the start of any working session.
-version: 1.0.0
+description: Session-start bootstrap for this project. Validates the bootstrap, follows AGENTS.md's fast read order, reconciles the operating-contract revision with live work and run records, and prints a tight standup. Read-only. Use at the start of any working session.
+version: 1.1.0
 scope: project
 ---
 
@@ -18,30 +18,37 @@ is `/handoff`'s job.
 1. **Locate the project root.** From the cwd, walk up to the git root. Confirm it
    has `AGENTS.md` and `agent/agentic_information/`.
 
-2. **Follow the documented read order.** Open `AGENTS.md` and read the files it
-   tells you to read at session start, in that order. If it gives no explicit
-   order, use the default for this template:
-   `AGENTS.md` → `agent/agentic_information/CURRENT_STATE.md` →
-   `agent/agentic_information/CLOSED_LOOP_LEDGER.md` →
-   `agent/agentic_information/CAMPAIGN_LEDGER.md` →
-   `agent/experiments/BEST_SCORES.md` (if present) → the relevant `docs/`.
+2. **Validate before trusting summaries.** Run `python agent/validate_project.py`.
+   A structural or operating-contract revision error blocks new launches until
+   reconciled. A timestamp warning requires a live check but does not prove the
+   record is wrong.
 
-3. **Check what's in flight.** Run whatever "active work" probe `AGENTS.md`
-   documents. Generic fallbacks: `git log --oneline -5`; any job-queue or
-   process check the project uses (e.g. `squeue -u "$USER"`, `tmux ls`,
-   `ls agent/experiments/*/RUNNING 2>/dev/null`).
+3. **Follow the documented fast read order.** Read `CURRENT_STATE.md`, then the
+   matching `OPERATING_CONTRACT.md` revision. Inspect only the open/relevant rows
+   and Tried-And-Rejected section of `CLOSED_LOOP_LEDGER.md`, the relevant/recent
+   entries of `CAMPAIGN_LEDGER.md`, and `BEST_SCORES.md`. Read task-specific run
+   records or source only after this orientation; do not ingest all history by
+   default.
 
-4. **Check working-tree state.** `git status -s`. Flag any uncommitted work from a
+4. **Reconcile what's in flight.** Run the exact live-work discovery command from
+   `OPERATING_CONTRACT.md`. For each claimed active run, compare scheduler/process
+   state with `CURRENT_STATE.md`, any `RUNNING` marker, and the experiment's
+   `RUN.md`. A marker alone is not evidence that a process exists. Confirm a prior
+   process is terminal before proposing a replacement.
+
+5. **Check working-tree state.** `git status -s` and `git log --oneline -5`. Flag any uncommitted work from a
    prior session as a loose end.
 
-5. **Scan for landmines.** Pull the Tried-And-Rejected / NO-GO entries from the
+6. **Scan for landmines.** Pull the Tried-And-Rejected / NO-GO entries from the
    closed-loop ledger so you don't re-propose a rejected approach without a new
    argument.
 
 ## Output (a standup, not a report)
 
 - **Where we are:** 1–2 lines from CURRENT_STATE; current goal + primary metric.
-- **In flight:** what's running, with ids/state.
+- **Contract:** active revision and evaluation status; report any mismatch or
+  provisional gate.
+- **In flight:** what's actually running, with ids/state and reconciled run record.
 - **Immediate next step:** the single documented next action.
 - **Open blockers.**
 - **Uncommitted work.**

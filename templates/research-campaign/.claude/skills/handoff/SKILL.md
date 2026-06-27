@@ -1,7 +1,7 @@
 ---
 name: handoff
 description: Session-close for this project. Reviews in-flight/finished work, then writes findings ONLY to the canonical files named in AGENTS.md's result-routing table (CURRENT_STATE + ledgers; optional agent/agentic_information/<TOPIC>_HANDOFF.md for deep dives) — never inventing a new path or file. Commits completed verified work (raw artifacts stay off git) and reports done/remaining/next-step. Use before ending a session or as a mid-session checkpoint.
-version: 1.0.0
+version: 1.1.0
 scope: project
 ---
 
@@ -26,17 +26,20 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
    this skill enforces *that you obey it*.
 
 2. **Account for every task you ran.** Report anything still running (ids/state).
-   For finished work, read its outputs/logs and summarize the result; never claim
-   success without looking.
+   Reconcile the scheduler/process, markers, and each experiment's `RUN.md`. For
+   finished work, read its outputs/logs and summarize the result; never claim
+   success without looking. Scheduler completion is not an evaluation or verdict.
 
 3. **Write findings to the canonical targets only:**
 
    | Produced thing | Goes to (verify against the project's table) |
    |---|---|
    | Live snapshot / next step / blockers | `agent/agentic_information/CURRENT_STATE.md` — **single-writer; overwrite, keep short** |
+   | Changed environment/resource/launch/eval policy | `agent/agentic_information/OPERATING_CONTRACT.md` — bump revision, log the reason in campaign history, and update current state's revision in the same change |
    | Fix / hypothesis verdict | `agent/agentic_information/CLOSED_LOOP_LEDGER.md` (close the row; terminal status; move durable NO-GOs to Tried-And-Rejected) |
    | Decision / experiment history | `agent/agentic_information/CAMPAIGN_LEDGER.md` (append-only) |
    | Best metric by area | `agent/experiments/BEST_SCORES.md`, if present (never claim a win inside the noise floor) |
+   | Per-run state/provenance | `<experiment_dir>/RUN.md` (record exact command, terminal state, evaluation artifact, decision, and reconciliation) |
    | Build details / gotchas worth a deep-dive | `agent/agentic_information/<TOPIC>_HANDOFF.md` or `<TOPIC>_RESULT.md` — only if routing lists this slot, and only for a genuine deep-dive |
 
    For routine close, CURRENT_STATE + the ledgers are enough. Don't create a
@@ -47,7 +50,11 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
    files, no new directories, no `notes.md` / `SESSION_*.md` / dated files.
    `<TOPIC>` must be a real area, not a free-form label.
 
-5. **Commit completed, verified units.** Follow Git Hygiene. One coherent unit per
+5. **Validate the handoff.** Run `python agent/validate_project.py`. Resolve
+   structural and contract-revision errors. For freshness warnings, verify the live
+   source and refresh only records that are actually stale.
+
+6. **Commit completed, verified units.** Follow Git Hygiene. One coherent unit per
    commit, descriptive message. **Before staging, verify no large/raw artifacts
    are included** — raw outputs live under `experiments/` or `runs/`, never in
    git. `git status -s` first; stage deliberately (not blind `git add -A`). Commit
@@ -56,6 +63,6 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
 
 ## Output
 
-Report files written (each a routed target — name them), committed units (hashes +
-one-liners), still-running work, and what's left. If a finding seemed to want a
-home outside the routing table, say so and ask rather than inventing a path.
+Report files written (each a routed target — name them), validator result, committed
+units (hashes + one-liners), still-running work, and what's left. If a finding seemed
+to want a home outside the routing table, say so and ask rather than inventing a path.
