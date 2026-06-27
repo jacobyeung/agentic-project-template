@@ -7,9 +7,9 @@ agent/experiments/<area>/<experiment_tag>/
 ```
 
 Copy the run-record template below to `<experiment_dir>/RUN.md` before submission.
-`RUN.md` is the durable control record; raw logs, checkpoints, predictions, and metric
-files remain artifacts in the same experiment directory or the external output root
-named by the operating contract.
+`RUN.md` and compact reviewable evidence are the tracked control record. Large raw
+logs, checkpoints, predictions, and metric files live only at the external output root
+named by the operating contract and are referenced here by path and digest.
 
 ## Lifecycle
 
@@ -68,8 +68,10 @@ The autonomous loop for one experiment is:
 ## Frozen Inputs
 
 - Git commit and dirty diff path:
+- Source/worktree content digest (or clean-tree assertion):
 - Config path and digest:
-- Data/checkpoint identifiers:
+- Data artifact and order/split digests:
+- Checkpoint schema, resolved architecture/arguments, and branch:
 - Environment identifier:
 - Output path:
 
@@ -85,10 +87,14 @@ The autonomous loop for one experiment is:
 ## Execution
 
 - Exact launch command:
+- Required artifacts and expected formats:
+- Run-manifest path and attempt number:
 - Job/process identifier:
 - Scheduler dependencies or array throttle:
 - Checkpoint/resume command:
 - Terminal state and reason:
+- Artifact fingerprints attributed to this attempt:
+- Retry output/task subset and protocol-change acknowledgement (if any):
 
 ## Evaluation
 

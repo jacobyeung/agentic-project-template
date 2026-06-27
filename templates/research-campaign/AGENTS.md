@@ -166,7 +166,8 @@ claims before spending substantial compute.
 | Experiment history / decision reason | `agent/agentic_information/CAMPAIGN_LEDGER.md` |
 | Best eligible metric by area | `agent/experiments/BEST_SCORES.md` |
 | Per-run control state and provenance | `agent/experiments/<area>/<experiment_tag>/RUN.md` |
-| Raw outputs | `agent/experiments/<area>/<experiment_tag>/` or the contract's output root |
+| Compact evidence | `agent/experiments/<area>/<experiment_tag>/` |
+| Large raw outputs | the external output root in `OPERATING_CONTRACT.md` |
 | Build details / durable gotchas | `agent/agentic_information/<topic>_HANDOFF.md` or `<topic>_RESULT.md` |
 | Research intake | `reports/DeepResearch/README.md` and the source report |
 

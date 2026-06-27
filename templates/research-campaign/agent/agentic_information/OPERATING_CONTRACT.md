@@ -55,6 +55,12 @@ Rules:
 
 - Run the admission check immediately before every submission and record the observed
   total plus the post-launch total in the experiment's `RUN.md`.
+- All cooperating launchers must hold one shared lock (or use an equivalent
+  scheduler-enforced transaction) from the live observation through submission. A
+  check followed by an unlocked submit has a race under multiple agents.
+- Count every queued branch that may become concurrent. Collapse only relationships
+  proven serialized by an array throttle, singleton lane, or explicit dependency
+  chain; do not assume an arbitrary dependency prevents overlap.
 - A job that would exceed a hard limit must not be submitted, even if the scheduler
   might leave it pending.
 - State whether packing is required, allowed, or forbidden: `<PACKING_POLICY>`.
@@ -80,6 +86,11 @@ Also inspect durable run state under `agent/experiments/` and reconcile stale
 - Timeout or idle-reaping policy: `<TIMEOUT_POLICY>`
 - Cancellation command: `<CANCELLATION_COMMAND>`
 
+`<LAUNCH_COMMAND>` must implement the shared admission-to-submission critical section
+for cooperating projects. Direct backend submission is forbidden because it bypasses
+that transaction, provenance checks, and retry scoping. Document any external callers
+that do not honor the shared lock as an explicit residual race.
+
 No experiment may launch until all of these are true:
 
 - Contract status is `ready`, or it is `provisional` and the permitted scope and
@@ -89,6 +100,9 @@ No experiment may launch until all of these are true:
 - The experiment directory contains a `RUN.md` copied from the template in
   `agent/experiments/README.md` and its state is `preflight_passed`.
 - Inputs, code revision, config, baseline, and output path are frozen or identified.
+- The exact launcher is tracked and the scientific source/config/preregistration
+  worktree is clean. If dirty launches are intentionally allowed for smokes, persist a
+  content digest or patch—not merely a list of dirty paths.
 - The resource admission check passes under this contract revision.
 - The smoke check passes, and any project-specific feasibility or confound gate is
   documented.
@@ -114,12 +128,32 @@ They may guide the next test but must not be promoted as a campaign-best or fina
 Every reported result must include the exact command, artifact path, data split, sample
 count, baseline, and contract revision.
 
+Dataset indices must be bound to the exact ordered data artifact they index. Pin and
+verify a full artifact digest or a documented per-sample/order fingerprint; counts
+alone do not establish population identity.
+
+## Artifact And Checkpoint Contract
+
+- A process exit code and scheduler `COMPLETED` state are not completion. A successful
+  attempt must create or change every declared nonempty artifact; structured artifacts
+  must parse, and their fingerprints must be recorded atomically with terminal state.
+- A prior artifact may be skipped only when its succeeded manifest, required-artifact
+  set, and current fingerprints all match. Filename existence is insufficient.
+- Training checkpoints use a supported schema version and persist the fully resolved
+  architecture, config digest, training arguments, and branch identity. Legacy
+  checkpoints may remain read-only but must not resume silently under current aliases.
+- Retries name the exact failed/stale output set. Array retries also name the exact task
+  subset, with one output per task. Command or code changes require an explicit,
+  recorded protocol-change acknowledgement or a new output directory.
+
 ## Recovery And Cleanup
 
 - A running job must have a scheduler/process identifier and last-observed time in both
   its `RUN.md` and `CURRENT_STATE.md`.
 - On restart, verify the process is gone before resubmitting. Prefer resume from the
   last valid checkpoint over a duplicate fresh launch.
+- A stale `running` record is retryable only after its scheduler identity is confirmed
+  absent. A retry acknowledgement for one output must not authorize unrelated work.
 - On failure or cancellation, preserve logs, record the terminal state, remove stale
   `RUNNING` markers, and decide whether the evidence is valid, invalid, or incomplete.
 - On completion, evaluate once with the contract above, route the verdict to the

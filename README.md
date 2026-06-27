@@ -65,7 +65,8 @@ points to the small set of live records needed for the current task.
 - `CAMPAIGN_LEDGER.md` is append-only project history and decision rationale.
 - Every research run has a durable `RUN.md` that separates scheduler completion,
   evaluation, and scientific verdicts.
-- Raw outputs live under `experiments/`, `runs/`, or another explicit artifact directory.
+- Tracked run directories contain control records and compact evidence; large raw
+  artifacts live under the explicit external output root in the operating contract.
 - Optional `coord.py` provides leases, heartbeats, status files, completed work records, and a merge lock.
 
 When editing the research scaffold itself, validate its structure while allowing its

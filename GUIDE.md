@@ -4,6 +4,14 @@ This template is for projects where coding agents need durable memory, repeatabl
 workflows, and clear rules for updating state. It works for a single agent, but it is
 especially useful when the project runs for many days or multiple agents share work.
 
+The 2026-06-26 research-campaign hardening was validated against a live autonomous
+vision campaign. It adds the reusable failure boundaries that audit exposed:
+admission and submission share one critical section; queued resource branches are
+counted unless provably serialized; completion is attributed to artifacts produced by
+one attempt; scientific inputs are frozen and content-identified; retries name exact
+outputs/task subsets; and data/checkpoint schemas bind results to their true inputs.
+Projects still provide scheduler-specific implementations for these contracts.
+
 ## Which Template To Use
 
 Use `templates/research-campaign/` when the core loop is:
