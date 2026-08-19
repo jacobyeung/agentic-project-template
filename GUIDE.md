@@ -4,9 +4,8 @@ This template is for projects where coding agents need durable memory, repeatabl
 workflows, and clear rules for updating state. It works for a single agent, but it is
 especially useful when the project runs for many days or multiple agents share work.
 
-The templates distill a live autonomous research campaign; each rule earned its
-place by preventing a failure that campaign actually hit. The launch contracts
-encode the failure boundaries an audit exposed: admission and submission share one
+The templates distill a live autonomous research campaign. The launch contracts
+encode these failure boundaries: admission and submission share one
 critical section; queued resource branches count unless provably serialized;
 completion belongs to artifacts one attempt produced; scientific inputs are frozen
 and content-identified; retries name exact outputs/task subsets; and data/checkpoint
@@ -18,12 +17,10 @@ scheduler-specific implementations for these contracts.
 Context economy is mechanical, not aspirational. Agents read a small live set in
 full and grep everything else; live files carry word caps; and
 `agent/rotate_ledgers.py` rotates closed rows into `ledger_archive/`, with `--check`
-enforcing the caps. (Evidence: in the source campaign, an unrotated ledger grew to
-181k words, and bulk-reading it at session start cost more tokens than any other
-activity.) Subagent briefs are self-contained, with shared boilerplate in one
-designated file — subagents that bootstrap through campaign state cost that campaign
-roughly 250k words a day. Watchers sleep in-process and report at a minutes-scale
-cadence; agent-turn polling loops burn model quota for nothing. Checks are few and
+enforcing the caps. Subagent briefs are self-contained, with shared boilerplate in
+one designated file rather than subagents reading campaign state. Watchers sleep
+in-process and report at a minutes-scale cadence; agent-turn polling loops burn
+model quota for nothing. Checks are few and
 decisive: the pre-launch gate is a diff against the named baseline showing exactly
 the pre-registered deltas, so a launch on a proven stack takes minutes, not hours;
 and an expensive run must run its standard evaluation in its own chain or disclose

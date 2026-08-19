@@ -32,9 +32,7 @@ Read IN FULL — this set is small by design; keep the whole set under ~10k toke
    limits, live-work command, launch rules, evaluation status. Confirm its revision
    matches the one quoted in `CURRENT_STATE.md`.
 
-Everything else is **grep-on-demand — NEVER read end-to-end.** (In the campaign this
-template distills, an unrotated ledger grew to 181k words, and bulk-reading it at
-session start cost more tokens than any other activity.)
+Everything else is **grep-on-demand — NEVER read end-to-end.**
 
 - `agent/agentic_information/TRIED_AND_REJECTED.md` — grep BEFORE opening any new
   hypothesis; do not rerun a NO-GO without a new mechanism.
@@ -183,16 +181,14 @@ gotchas that apply, and the report path. Shared boilerplate that every subagent 
 file instead of repeating it. If a task builds on one specific prior experiment, the
 brief names that one row or document and the subagent reads only it. Campaign state
 stays with the orchestrating session — a subagent bootstrapping through the ledgers
-is a defect. (Subagents that bootstrap through campaign state cost the source
-campaign roughly 250k words per day across ~13 dispatches.)
+is a defect.
 
 Monitor at a cheap cadence; never busy-wait. After submitting a job or subagent, do
 not poll in agent turns every few seconds. Check at a minutes-scale cadence (5–10
 minutes catches a dead job or subagent promptly), preferably via a watcher script
 that sleeps in-process and exits with a clear code; then resume agent work. Before
 arming any watcher, inspect the live state first — the event you are waiting for may
-already have happened (arm-after-event races caused hour-long stalls in the source
-campaign).
+already have happened, and a watcher armed after the event waits forever.
 
 ## 8. Research Intake
 
