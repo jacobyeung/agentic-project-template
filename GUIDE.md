@@ -84,8 +84,9 @@ task-specific; subagents never bootstrap through the ledgers.
 `agent/experiments/` or `runs/` stores immutable control records and compact evidence;
 do not treat a summary ledger as the only record of a run. In the research template,
 large raw artifacts live at the external output root named by the operating contract,
-while each tracked experiment gets a `RUN.md` containing preregistration, frozen
-inputs, resource admission, job identity, evaluation provenance, and reconciliation.
+while each tracked experiment gets a short `RUN.md` carrying its state, frozen
+inputs, resource admission, exact launch command, job identity, and outcome; the
+hypothesis and predicted check live in the linked closed-loop row, not duplicated.
 
 ## Update Routing
 

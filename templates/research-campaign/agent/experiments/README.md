@@ -47,6 +47,11 @@ The autonomous loop for one experiment is:
 
 ## `RUN.md` Template
 
+The hypothesis, predicted check, and matched baseline live in the closed-loop ledger
+row — link it, do not repeat it. Every field below maps to a real failure mode: state
+drift, unreproducible inputs, unrecoverable jobs, or a scheduler completion mistaken
+for a verdict. Filling this in takes a minute; each line is one value or one command.
+
 ```markdown
 # Run: <experiment_tag>
 
@@ -54,67 +59,32 @@ The autonomous loop for one experiment is:
 - Owner: <agent-or-human>
 - Closed-loop row: <CL-NNNN>
 - Operating-contract revision: <OPS-NNNN>
-- Created: <YYYY-MM-DD HH:MM TZ>
 - Last observed: <YYYY-MM-DD HH:MM TZ>
-
-## Preregistration
-
-- Hypothesis:
-- Predicted check and threshold:
-- Matched baseline:
-- Smallest decisive test:
-- Failure interpretation:
 
 ## Frozen Inputs
 
-- Git commit and dirty diff path:
-- Source/worktree content digest (or clean-tree assertion):
+- Git commit (plus dirty-diff digest if dirty):
 - Config path and digest:
-- Data artifact and order/split digests:
-- Checkpoint schema, resolved architecture/arguments, and branch:
-- Environment identifier:
+- Data / checkpoint identifiers:
 - Output path:
 
-## Preflight
+## Launch
 
-- Feasibility / mechanism argument:
-- Pathological or confounded cases:
-- Smoke-test command and result:
-- Live resource observation:
-- Requested resources and post-launch total:
-- Preflight verdict: pending
-
-## Execution
-
+- Baseline diff reviewed (exactly the pre-registered deltas): pending
+- Smoke or delta-smoke result:
+- Resource admission (observed total -> post-launch total):
 - Exact launch command:
-- Required artifacts and expected formats:
-- Run-manifest path and attempt number:
-- Job/process identifier:
-- Scheduler dependencies or array throttle:
-- Checkpoint/resume command:
+- Job / process identifier:
+
+## Outcome
+
 - Terminal state and reason:
-- Artifact fingerprints attributed to this attempt:
-- Retry output/task subset and protocol-change acknowledgement (if any):
-
-## Evaluation
-
-- Evaluation-contract status:
-- Exact evaluation command:
-- Metric artifact:
-- Data split, filter, and sample count:
-- Baseline result:
-- Candidate result and uncertainty:
-
-## Decision And Reconciliation
-
-- Registered threshold met: pending
-- Verdict: pending
-- Closed-loop ledger updated: no
-- Campaign ledger updated: no
-- Best scores updated or ineligible reason:
-- Current state updated: no
-- Stale markers removed: no
+- Exact evaluation command and metric artifact:
+- Result vs registered threshold:
+- Verdict (ledger row closed, best scores updated or ineligible):
 ```
 
-Do not edit preregistered predictions after observing results. Append a dated correction
-that makes the original text visible if a factual mistake must be fixed.
+The prediction is frozen in the ledger row before the run; do not edit it after
+observing results. Append a dated correction that keeps the original text visible if
+a factual mistake must be fixed. Anything else worth keeping (per-case drilldowns,
+plots, manifests) goes in the experiment directory as ordinary files.

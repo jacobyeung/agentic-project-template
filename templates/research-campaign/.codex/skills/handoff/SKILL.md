@@ -39,7 +39,7 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
    | Fix / hypothesis verdict | `agent/agentic_information/CLOSED_LOOP_LEDGER.md` (close the row compactly — ≤150 words, narrative in the run record; move durable NO-GOs to `TRIED_AND_REJECTED.md`) |
    | Decision / experiment history | `agent/agentic_information/CAMPAIGN_LEDGER.md` (append-only) |
    | Best metric by area | `agent/experiments/BEST_SCORES.md`, if present (never claim a win inside the noise floor) |
-   | Per-run state/provenance | `<experiment_dir>/RUN.md` (record exact command, terminal state, evaluation artifact, decision, and reconciliation) |
+   | Per-run state/provenance | `<experiment_dir>/RUN.md` (exact command, job id, terminal state, evaluation artifact, verdict) |
    | Build details / gotchas worth a deep-dive | `agent/agentic_information/<TOPIC>_HANDOFF.md` or `<TOPIC>_RESULT.md` — only if routing lists this slot, and only for a genuine deep-dive |
 
    For routine close, CURRENT_STATE + the ledgers are enough. Don't create a
