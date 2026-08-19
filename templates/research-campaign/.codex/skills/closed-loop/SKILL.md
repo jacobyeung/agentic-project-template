@@ -30,12 +30,13 @@ one.
      Result/Verdict blank. Link the row to the planned experiment's `RUN.md` before
      launch.
    - **Close** (after running): fill Result + Verdict/Next-Step and set a terminal
-     status (`done`/`reverted`/`no_go`/`superseded`). Move durable NO-GOs to the
-     Tried-And-Rejected list.
+     status (`done`/`reverted`/`no_go`/`superseded`). Move durable NO-GOs to
+     `agent/agentic_information/TRIED_AND_REJECTED.md`.
 
-3. **Guard against repeats.** Before opening a row, scan Tried-And-Rejected / prior
-   `no_go` rows — don't re-propose a rejected approach without a new argument, and
-   state what's new if you do.
+3. **Guard against repeats.** Before opening a row, grep
+   `agent/agentic_information/TRIED_AND_REJECTED.md` and prior `no_go` rows — don't
+   re-propose a rejected approach without a new argument, and state what's new if
+   you do.
 
 4. **Honor the active operating contract and project-specific gate.** Read
    `agent/agentic_information/OPERATING_CONTRACT.md`. Record its revision in the
