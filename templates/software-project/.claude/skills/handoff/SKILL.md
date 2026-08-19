@@ -1,7 +1,7 @@
 ---
 name: handoff
 description: Session-close for this project. Reviews in-flight/finished work, then writes findings ONLY to the canonical files named in AGENTS.md's result-routing table (CURRENT_STATE + ledgers; optional agent/agentic_information/<TOPIC>_HANDOFF.md for deep dives) — never inventing a new path or file. Commits completed verified work (raw artifacts stay off git) and reports done/remaining/next-step. Use before ending a session or as a mid-session checkpoint.
-version: 1.0.0
+version: 1.1.0
 scope: project
 ---
 
@@ -33,7 +33,7 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
 
    | Produced thing | Goes to (verify against the project's table) |
    |---|---|
-   | Live snapshot / next step / blockers | `agent/agentic_information/CURRENT_STATE.md` — **single-writer; overwrite, keep short** |
+   | Live snapshot / next step / blockers | `agent/agentic_information/CURRENT_STATE.md` — **owner-keyed sections: overwrite only your own; keep short** |
    | Fix / hypothesis verdict | `agent/agentic_information/CLOSED_LOOP_LEDGER.md` (close the row; terminal status; move durable NO-GOs to Tried-And-Rejected) |
    | Decision / experiment history | `agent/agentic_information/CAMPAIGN_LEDGER.md` (append-only) |
    | Best metric by area | `agent/experiments/BEST_SCORES.md`, if present (never claim a win inside the noise floor) |
@@ -42,10 +42,8 @@ top-level files, or invented names. A finding with "nowhere to go" goes in
    For routine close, CURRENT_STATE + the ledgers are enough. Don't create a
    `<TOPIC>_HANDOFF.md` just to have one.
 
-4. **Do NOT touch these:** the root `HANDOFF_CURRENT.md` is a stable pointer stub
-   (it redirects to AGENTS.md + CURRENT_STATE.md) — leave it as-is. No new root
-   files, no new directories, no `notes.md` / `SESSION_*.md` / dated files.
-   `<TOPIC>` must be a real area, not a free-form label.
+4. **Do NOT create:** new root files, new directories, `notes.md` / `SESSION_*.md`
+   / dated files. `<TOPIC>` must be a real area, not a free-form label.
 
 5. **Commit completed, verified units.** Follow Git Hygiene. One coherent unit per
    commit, descriptive message. **Before staging, verify no large/raw artifacts

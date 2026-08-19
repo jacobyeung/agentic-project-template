@@ -1,7 +1,7 @@
 ---
 name: codex
 description: Dispatch a task to the Codex CLI (GPT-5.5) as an independent subagent that can write files and run commands. Use to OFFLOAD IMPLEMENTATION to GPT-5.5 instead of a Claude/Sonnet subagent when you have higher Codex limits, or to get an adversarial review / second opinion from a model that shares no context with you. Supports write-mode execution and read-only review.
-version: 1.0.0
+version: 1.1.0
 scope: project
 ---
 
@@ -29,27 +29,46 @@ Whether it can write/execute depends on the sandbox flag (and on
 | Implement: needs network / outside-repo writes / job submission | `-s danger-full-access` | Most powerful. **Isolate in a git worktree** so it can't disturb your live tree. |
 | Review / second opinion only | `-s read-only` | Cannot modify files; the safe default for any "just look" task. |
 
+## Model tier and effort (choose per task, pass explicitly)
+
+Tier choice is judgment per task, never a mechanical default. Planning-class work
+(experiment/spec design, architecture — anywhere a misread wastes a build round)
+leans the strongest tier; routine implementation the middle tier; mechanical
+transforms the cheapest. Pass BOTH the model and the reasoning effort explicitly on
+EVERY dispatch (`-m <model> -c model_reasoning_effort=<low|medium|high>`). Keep a
+mid-tier default in `~/.codex/config.toml` so an unflagged dispatch bills a mid
+cell — but the default is a backstop, not a choice.
+
 ## Implementation-offload recipe
 
 1. **Write a self-contained task spec** to a prompt file: goal, exact files to
-   touch, constraints, and explicit **acceptance criteria** (which tests must
-   pass). Codex starts cold and can't see your conversation.
+   touch, constraints, input/dataset selection, and explicit **acceptance
+   criteria** (which tests must pass). Codex starts cold and can't see your
+   conversation. Do not tell it to read the campaign-state files
+   (`agent/agentic_information/`); paste the facts it needs, or point it at the
+   one designated shared file
+   (`agent/agentic_information/SUBAGENT_SHARED_CONTEXT.md`) for boilerplate every
+   dispatch shares. If the task builds on one prior experiment, name that one row
+   or document — nothing else.
 2. **Optionally isolate** in a worktree:
    `git -C <repo> worktree add /tmp/cdx_<task> HEAD`, then point `-C` at it.
-3. **Run it in the background** (xhigh runs take minutes):
+3. **Run it in the background** (high-effort runs take minutes):
    ```bash
-   codex exec -m gpt-5.5 -s workspace-write -C "$REPO" \
+   codex exec -m <model> -c model_reasoning_effort=<effort> \
+     -s workspace-write -C "$REPO" \
      -o /tmp/codex_<task>.md - < /tmp/codex_<task>_prompt.md \
      > /tmp/codex_<task>.log 2>&1
    ```
    `-o <file>` captures Codex's final message; the redirect keeps the transcript.
+   Check the output file at a minutes-scale cadence (5–10 min); never busy-wait
+   in agent turns.
 4. **Verify before keeping.** `git -C "$REPO" diff` to read every change, run the
    acceptance tests yourself, and only then keep or commit. Codex is the worker;
    you own the merge.
 
 ## Review recipe
 
-`codex exec -m gpt-5.5 -s read-only -C "$REPO" -o /tmp/codex_<task>.md - < prompt.md`.
+`codex exec -m <model> -c model_reasoning_effort=<effort> -s read-only -C "$REPO" -o /tmp/codex_<task>.md - < prompt.md`.
 Prompt it to attack/refute, default-to-skeptical, cite `file:line`, and end with a
 BLOCKER/OK or PASS/FAIL verdict. Treat findings as claims to verify, not ground truth.
 

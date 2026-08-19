@@ -121,8 +121,8 @@ Do not use the queue as the durable history. The ledgers are the history.
 
 ## 5. Current State
 
-In multi-agent mode, `CURRENT_STATE.md` should be single-writer unless the project has
-an explicit merge process for it. Workers publish status through:
+In multi-agent mode, `CURRENT_STATE.md` uses owner-keyed sections: each agent
+overwrites only its own section. Workers publish status through:
 
 ```bash
 python agent/coord.py status --state running --work-id "$WID" --note "<note>"

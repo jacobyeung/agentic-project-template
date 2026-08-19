@@ -102,6 +102,11 @@ No experiment may launch until all of these are true:
 - Contract status is `ready`, or it is `provisional` and the permitted scope and
   limitation are explicit in `RUN.md`.
 - A closed-loop row exists with a falsifiable predicted check stated before the run.
+- The row (or its linked `RUN.md`) states the full design and every delta versus the
+  named incumbent/baseline in plain terms, and pre-registers the ablation controls
+  that will make the result interpretable.
+- The experiment-delta diff has been reviewed: a diff of the config/launcher against
+  the named baseline contains exactly the pre-registered deltas — nothing more.
 - The smallest decisive test has been selected.
 - The experiment directory contains a `RUN.md` copied from the template in
   `agent/experiments/README.md` and its state is `preflight_passed`.
@@ -112,6 +117,21 @@ No experiment may launch until all of these are true:
 - The resource admission check passes under this contract revision.
 - The smoke check passes, and any project-specific feasibility or confound gate is
   documented.
+
+Scale validation to the diff. A config-only diff on an already-proven stack needs the
+diff review plus a short delta-smoke reusing prior environment/import/data receipts;
+full re-validation is for changes that touch the contract surface (data schema, eval
+protocol, resource shape) or stale receipts. Prefer one decisive check over many weak
+ones.
+
+## Monitoring Policy
+
+- Watcher command or cadence: `<WATCHER_COMMAND_OR_CADENCE>`
+- Check submitted work at a minutes-scale cadence (5–10 minutes catches a dead job
+  or subagent promptly), preferably via a watcher that sleeps in-process and exits
+  with a clear code. Never busy-wait in agent turns.
+- Inspect live scheduler/filesystem state before arming a watcher — the event may
+  already have happened.
 
 ## Evaluation Contract
 
@@ -133,6 +153,12 @@ Results produced while status is `not_implemented` or `provisional` are explorat
 They may guide the next test but must not be promoted as a campaign-best or final claim.
 Every reported result must include the exact command, artifact path, data split, sample
 count, baseline, and contract revision.
+
+Completeness: a training or otherwise expensive run is complete only when its own
+chain has also run the standard evaluation and produced the standard results row. If
+a standard cell is skipped, the report says so explicitly, with the reason. Evaluation
+wiring never delays the launch itself — running the evaluation afterward is acceptable
+when the gap is disclosed; the defect is a silent gap, not a late eval.
 
 Dataset indices must be bound to the exact ordered data artifact they index. Pin and
 verify a full artifact digest or a documented per-sample/order fingerprint; counts

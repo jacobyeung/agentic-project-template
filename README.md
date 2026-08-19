@@ -41,40 +41,35 @@ chmod +x ~/my-project/agent/coord.py
 ```
 
 For a research campaign, replace the required bootstrap placeholders and remove or
-fill every sample row in the live records, then validate the initialized project:
+fill every sample row in the live records. At every session handoff, rotate closed
+ledger history and verify the live records stay under their word caps:
 
 ```bash
-python agent/validate_project.py
+python agent/rotate_ledgers.py          # rotate closed history to ledger_archive/
+python agent/rotate_ledgers.py --check  # fail if a live file exceeds its cap
 ```
 
-The validator rejects unresolved control-record placeholders, invalid or duplicate
-closed-loop states, operating-contract revision drift, malformed active run records,
-and divergent Codex/Claude skill mirrors; it also warns when live records age out.
-
 For either template, start every agent session with `AGENTS.md`; its bootstrap section
-points to the small set of live records needed for the current task.
+names the small set of live records to read in full — everything else is grep-only.
 
 ## Core Ideas
 
 - `AGENTS.md` is the canonical bootstrap. It changes rarely.
-- `CURRENT_STATE.md` is the short live snapshot. In multi-agent mode it is single-writer.
+- `CURRENT_STATE.md` is the short live snapshot, under a hard word cap. When several
+  sessions run at once its sections are owner-keyed: each writer owns only its own section.
 - Research templates keep mutable environment, resource, launch, and evaluation rules
   in one revisioned `OPERATING_CONTRACT.md` instead of copying them into bootstrap or
   history files.
-- `CLOSED_LOOP_LEDGER.md` records hypotheses, fixes, predicted checks, tests, and verdicts.
+- `CLOSED_LOOP_LEDGER.md` records hypotheses, fixes, predicted checks, tests, and verdicts
+  in compact rows; history is grep-only and rotates to `ledger_archive/` under word caps
+  enforced by `agent/rotate_ledgers.py` (research template).
 - `CAMPAIGN_LEDGER.md` is append-only project history and decision rationale.
 - Every research run has a durable `RUN.md` that separates scheduler completion,
   evaluation, and scientific verdicts.
 - Tracked run directories contain control records and compact evidence; large raw
   artifacts live under the explicit external output root in the operating contract.
+- Subagent briefs are self-contained: shared boilerplate lives once in
+  `SUBAGENT_SHARED_CONTEXT.md`; subagents never bootstrap through the ledgers.
 - Optional `coord.py` provides leases, heartbeats, status files, completed work records, and a merge lock.
-
-When editing the research scaffold itself, validate its structure while allowing its
-intentional placeholders:
-
-```bash
-python templates/research-campaign/agent/validate_project.py \
-  --template --root templates/research-campaign
-```
 
 See [GUIDE.md](GUIDE.md) for the full operating model.

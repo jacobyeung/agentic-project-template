@@ -2,8 +2,13 @@
 
 Last updated: `<LAST_UPDATED>` by `<UPDATED_BY>`
 
-Keep this file to one screen. It is a cache of the live situation, not evidence and not
+Keep this file to one screen (hard cap 1,500 words; `python agent/rotate_ledgers.py
+--check` enforces it). It is a cache of the live situation, not evidence and not
 history. Every result and decision below must point to its durable source.
+
+When several sessions or agents run at once, sections are owner-keyed: mark the
+section you own with your session/agent name and overwrite only your own.
+Analysis-only sessions do not write this file.
 
 ## Snapshot
 

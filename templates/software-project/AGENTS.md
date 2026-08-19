@@ -99,7 +99,8 @@ Rules in multi-agent mode:
 - Heartbeat while long-running work is active.
 - Mark work complete or failed.
 - Use the merge lock before merging to `main`.
-- Treat `CURRENT_STATE.md` as single-writer unless the project says otherwise.
+- `CURRENT_STATE.md` uses owner-keyed sections when several sessions or agents run
+  at once: overwrite only your own section.
 
 ## 8. Standing Gotchas
 
