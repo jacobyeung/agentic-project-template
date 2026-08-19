@@ -190,20 +190,7 @@ that sleeps in-process and exits with a clear code; then resume agent work. Befo
 arming any watcher, inspect the live state first — the event you are waiting for may
 already have happened, and a watcher armed after the event waits forever.
 
-## 8. Research Intake
-
-External reports and paper-derived candidates live in `reports/DeepResearch/`.
-
-Each unprocessed report should be triaged:
-
-```text
-candidate -> prerequisites -> GO/NO-GO -> smallest probe -> A/B test -> verdict
-```
-
-Update both the report status table and the routed ledgers. Recheck time-sensitive
-claims before spending substantial compute.
-
-## 9. Result Routing
+## 8. Result Routing
 
 | Produced thing | Write it to |
 |---|---|
@@ -217,12 +204,11 @@ claims before spending substantial compute.
 | Compact evidence | `agent/experiments/<area>/<experiment_tag>/` |
 | Large raw outputs | the external output root in `OPERATING_CONTRACT.md` |
 | Build details / durable gotchas | `agent/agentic_information/<topic>_HANDOFF.md` or `<topic>_RESULT.md` |
-| Research intake | `reports/DeepResearch/README.md` and the source report |
 
 Routine findings belong in existing routed files. Create a deep-dive document only
 when the result cannot be understood from the ledger and run artifacts.
 
-## 10. Optional Multi-Agent Protocol
+## 9. Optional Multi-Agent Protocol
 
 If `agent/coord.py` exists, read `agent/COORD_PROTOCOL.md` before starting shared work.
 
@@ -235,7 +221,7 @@ Rules in multi-agent mode:
 - Use the merge lock before merging to the protected branch.
 - A lease coordinates ownership; it does not replace resource admission or preflight.
 
-## 11. Autonomous Loop
+## 10. Autonomous Loop
 
 ```text
 bootstrap (two-tier read) -> reconcile live work -> collect finished runs -> evaluate
@@ -247,7 +233,7 @@ At each loop boundary, prefer draining finished or invalid work over starting an
 run. Stop only when the mission target is met, the user changes the objective, or a
 real blocker requires authority or information that is unavailable.
 
-## 12. Document Authority And Freshness
+## 11. Document Authority And Freshness
 
 Use this precedence when records disagree:
 
@@ -277,7 +263,7 @@ Freshness rules:
 - When stale records disagree, inspect primary evidence, update the active source, and
   append a decision naming the superseded revision without rewriting old history.
 
-## 13. Standing Gotchas
+## 12. Standing Gotchas
 
 Keep only durable mechanisms and failure modes here:
 

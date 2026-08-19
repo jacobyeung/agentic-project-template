@@ -87,9 +87,6 @@ large raw artifacts live at the external output root named by the operating cont
 while each tracked experiment gets a `RUN.md` containing preregistration, frozen
 inputs, resource admission, job identity, evaluation provenance, and reconciliation.
 
-`reports/DeepResearch/` is optional. Use it when external research reports, papers, or
-candidate technologies feed the project.
-
 ## Update Routing
 
 Use this rule in every project:
@@ -104,7 +101,6 @@ Use this rule in every project:
 | One run's state and provenance (research) | `<experiment_dir>/RUN.md` |
 | Raw outputs | the external output root named by `OPERATING_CONTRACT.md` |
 | Architecture notes | `docs/ARCHITECTURE.md` or a named handoff/result doc |
-| Research candidate status | `reports/DeepResearch/README.md` plus relevant report file |
 
 ## Recommended Research Agent Loop
 
