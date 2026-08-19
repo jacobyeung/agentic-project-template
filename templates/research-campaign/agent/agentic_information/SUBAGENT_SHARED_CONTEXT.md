@@ -1,9 +1,9 @@
 # Subagent Shared Context
 
-The ONE campaign file a dispatched subagent may be pointed at. Briefs stay
-self-contained for everything task-specific; this file holds only what every
-subagent needs, so briefs do not repeat it. Keep it under ~500 words — every
-subagent pointed here reads it in full.
+The one campaign file a dispatched subagent reads. Briefs stay self-contained for
+everything task-specific; this file holds only what every subagent needs, so briefs
+do not repeat it. Keep it under ~500 words — every subagent pointed here reads it in
+full.
 
 Subagents do not read `CURRENT_STATE.md`, the ledgers, or the operating contract.
 If a task needs a fact from those files, the dispatching session pastes that fact

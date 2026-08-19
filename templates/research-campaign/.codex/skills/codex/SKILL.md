@@ -31,7 +31,7 @@ Whether it can write/execute depends on the sandbox flag (and on
 
 ## Model tier and effort (choose per task, pass explicitly)
 
-Tier choice is judgment per task, never a mechanical default. Planning-class work
+Judge the tier per task; never default mechanically. Planning-class work
 (experiment/spec design, architecture — anywhere a misread wastes a build round)
 leans the strongest tier; routine implementation the middle tier; mechanical
 transforms the cheapest. Pass BOTH the model and the reasoning effort explicitly on

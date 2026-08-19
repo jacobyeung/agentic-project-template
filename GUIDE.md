@@ -4,30 +4,30 @@ This template is for projects where coding agents need durable memory, repeatabl
 workflows, and clear rules for updating state. It works for a single agent, but it is
 especially useful when the project runs for many days or multiple agents share work.
 
-The 2026-06-26 research-campaign hardening was validated against a live autonomous
-vision campaign. It adds the reusable failure boundaries that audit exposed:
-admission and submission share one critical section; queued resource branches are
-counted unless provably serialized; completion is attributed to artifacts produced by
-one attempt; scientific inputs are frozen and content-identified; retries name exact
-outputs/task subsets; and data/checkpoint schemas bind results to their true inputs.
-Where the scheduler supports held submission, bind a one-use admission receipt to the
-actual job id and adapter digest before release; an exported flag is not authorization.
-Projects still provide scheduler-specific implementations for these contracts.
+The templates distill a live autonomous research campaign; each rule earned its
+place by preventing a failure that campaign actually hit. The launch contracts
+encode the failure boundaries an audit exposed: admission and submission share one
+critical section; queued resource branches count unless provably serialized;
+completion belongs to artifacts one attempt produced; scientific inputs are frozen
+and content-identified; retries name exact outputs/task subsets; and data/checkpoint
+schemas bind results to their true inputs. Where the scheduler supports held
+submission, bind a one-use admission receipt to the actual job id and adapter digest
+before release; an exported flag is not authorization. Projects provide
+scheduler-specific implementations for these contracts.
 
-The 2026-08-18 revision distills two further months of the same live campaign, and
-prunes checks that never earned their keep. Context economy is now mechanical: the
-bootstrap splits into a small read-in-full set and grep-only history, live files
-carry word caps, and `agent/rotate_ledgers.py` rotates closed rows into
-`ledger_archive/` (`--check` enforces the caps; in the source campaign the unrotated
-ledger reached 181k words and bulk-reading it was the largest token cost in the
-project). Subagent briefs are self-contained, with shared boilerplate in one
-designated file instead of subagents re-reading campaign state. Monitoring is
-minutes-scale watchers, never agent-turn busy-waiting. The pre-launch check that
-proved most useful is a diff against the named baseline — exactly the pre-registered
-deltas, nothing more — so a launch on a proven stack takes minutes, not hours; and an
-expensive run must run its standard evaluation as part of its own chain or disclose
-the gap explicitly. The earlier `validate_project.py` structural linter was removed:
-the live campaign never adopted it, and unused checks are cost.
+Context economy is mechanical, not aspirational. Agents read a small live set in
+full and grep everything else; live files carry word caps; and
+`agent/rotate_ledgers.py` rotates closed rows into `ledger_archive/`, with `--check`
+enforcing the caps. (Evidence: in the source campaign, an unrotated ledger grew to
+181k words, and bulk-reading it at session start cost more tokens than any other
+activity.) Subagent briefs are self-contained, with shared boilerplate in one
+designated file — subagents that bootstrap through campaign state cost that campaign
+roughly 250k words a day. Watchers sleep in-process and report at a minutes-scale
+cadence; agent-turn polling loops burn model quota for nothing. Checks are few and
+decisive: the pre-launch gate is a diff against the named baseline showing exactly
+the pre-registered deltas, so a launch on a proven stack takes minutes, not hours;
+and an expensive run must run its standard evaluation in its own chain or disclose
+the gap explicitly.
 
 ## Which Template To Use
 
@@ -165,8 +165,8 @@ operationalize the loop and routing rules above:
 - `closed-loop` — open or close a `CLOSED_LOOP_LEDGER.md` row in the project's schema.
 - `summary` — how to write a recap for a reader who did not watch the work.
 - `codex` — dispatch Codex as an independent subagent, to offload implementation or
-  get a second opinion. Tier and effort are chosen per task and passed explicitly on
-  every dispatch; briefs are self-contained (subagents never read campaign state).
+  get a second opinion. Pick tier and effort per task and pass them explicitly on
+  every dispatch; write self-contained briefs (subagents never read campaign state).
 
 Edit or delete any skill per project. Keep the `.claude/` and `.codex/` copies in
 sync, or symlink one directory to the other.

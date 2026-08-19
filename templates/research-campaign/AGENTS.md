@@ -32,9 +32,9 @@ Read IN FULL — this set is small by design; keep the whole set under ~10k toke
    limits, live-work command, launch rules, evaluation status. Confirm its revision
    matches the one quoted in `CURRENT_STATE.md`.
 
-Everything else is **grep-on-demand — NEVER read end-to-end.** (In the live campaign
-this template is distilled from, the ledger reached 181k words and bulk-reading it at
-session start was the single largest token cost in the project.)
+Everything else is **grep-on-demand — NEVER read end-to-end.** (In the campaign this
+template distills, an unrotated ledger grew to 181k words, and bulk-reading it at
+session start cost more tokens than any other activity.)
 
 - `agent/agentic_information/TRIED_AND_REJECTED.md` — grep BEFORE opening any new
   hypothesis; do not rerun a NO-GO without a new mechanism.
@@ -121,9 +121,9 @@ For every meaningful hypothesis or fix:
    predicted check (one shard / one sample / one epoch) — and name the matched
    baseline. Scale up only after it survives.
 5. Create the experiment directory and `RUN.md`.
-6. The most useful pre-launch check is a diff, not a test suite: diff the new
-   experiment's config/launcher against its named baseline and confirm the diff
-   contains exactly the pre-registered deltas — nothing more. For config-only diffs
+6. Gate the launch on a diff, not a test suite: diff the new experiment's
+   config/launcher against its named baseline and confirm the diff contains exactly
+   the pre-registered deltas — nothing more. For config-only diffs
    on an already-proven stack, that diff review plus a short delta-smoke (reusing
    prior environment/import/data receipts) is sufficient; reserve full re-validation
    for changes that touch the contract surface (data schema, eval protocol, resource
@@ -183,10 +183,10 @@ gotchas that apply, and the report path. Shared boilerplate that every subagent 
 file instead of repeating it. If a task builds on one specific prior experiment, the
 brief names that one row or document and the subagent reads only it. Campaign state
 stays with the orchestrating session — a subagent bootstrapping through the ledgers
-is a defect. (Before this rule, subagents re-reading campaign state cost the source
+is a defect. (Subagents that bootstrap through campaign state cost the source
 campaign roughly 250k words per day across ~13 dispatches.)
 
-Monitoring is cheap-cadence, never busy-wait. After submitting a job or subagent, do
+Monitor at a cheap cadence; never busy-wait. After submitting a job or subagent, do
 not poll in agent turns every few seconds. Check at a minutes-scale cadence (5–10
 minutes catches a dead job or subagent promptly), preferably via a watcher script
 that sleeps in-process and exits with a clear code; then resume agent work. Before
